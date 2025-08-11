@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handwerkerfest – Interaktive Karte</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
+  html, body { height: 100%; margin:0; }
+  #map { height: 100%; width: 100%; }
+  .leaflet-popup-content-wrapper { border-radius: 12px; }
+  .leaflet-popup-content b { font-size: 14px; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map', { crs: L.CRS.Simple, minZoom: -1, maxZoom: 2, zoomControl: true });
+  var bounds = [[0,0], [2048, 1903]];
+  L.imageOverlay('https://image.jimcdn.com/app/cms/image/transf/none/path/sb2549a3a4411f8d3/image/i77e4828c9bf229dc/version/1754903999/image.png', bounds).addTo(map);
+  map.fitBounds(bounds);
+  // Marker
+  L.marker([1081, 1266]).addTo(map).bindPopup('<b>Nr. 1 – Imkereizubehör</b><br>Michael Diesing, Mechlenreuth');
+L.marker([766, 603]).addTo(map).bindPopup('<b>Nr. 2 – Schmied</b><br>Axel und Sofia Neumann, Hallerstein; Klaus Fischer, Grafengehaig');
+L.marker([429, 669]).addTo(map).bindPopup('<b>Nr. 3 – Drechsler</b><br>Jens Fölsche, Sonneberg');
+L.marker([1434, 1596]).addTo(map).bindPopup('<b>Nr. 4 – Holzröhren bohren</b><br>Bauernhofmuseum Kleinlosnitz');
+L.marker([1371, 1516]).addTo(map).bindPopup('<b>Nr. 5 – Dachdecker</b><br>Florian Strößenreuther, Schwarzenbach');
+L.marker([1287, 1384]).addTo(map).bindPopup('<b>Nr. 6 – Filzerei</b><br>Anita Köstler, Neualbenreuth');
+L.marker([1233, 1240]).addTo(map).bindPopup('<b>Nr. 7 – Zwiebelkuchen, Wein</b>');
+L.marker([1164, 1326]).addTo(map).bindPopup('<b>Nr. 8 – Goldschmied</b><br>Kerstin Emtmann, Hof');
+L.marker([155, 852]).addTo(map).bindPopup('<b>Nr. 9 – Bierbrauer</b><br>Florian Trautner, Hallerstein');
+L.marker([936, 1491]).addTo(map).bindPopup('<b>Nr. 10 – Dorfkirche</b>');
+L.marker([1086, 1265]).addTo(map).bindPopup('<b>Nr. 11 – Wurzelschnitzer</b><br>Martin Höfer, Fuchsmühl');
+L.marker([892, 1242]).addTo(map).bindPopup('<b>Nr. 12 – Kaffee und Kuchen</b>');
+L.marker([945, 1145]).addTo(map).bindPopup('<b>Nr. 13 – Kaffeegarten</b>');
+L.marker([1009, 1122]).addTo(map).bindPopup('<b>Nr. 14 – Holzschnitzer</b><br>Ottomar Heckel, Grünbach');
+L.marker([1030, 1060]).addTo(map).bindPopup('<b>Nr. 15 – Holzbildhauer</b><br>Holzart Glatz');
+L.marker([1128, 1024]).addTo(map).bindPopup('<b>Nr. 16 – Hutmacherin</b><br>Sabine Tauscher, Jena');
+L.marker([1158, 1067]).addTo(map).bindPopup('<b>Nr. 17 – Gegenstände aus Wachs und Gießharz</b><br>Lebenshilfe Fichtelgebirge');
+L.marker([1176, 1029]).addTo(map).bindPopup('<b>Nr. 18 – Kammmacher</b><br>Martin Groetsch, Hartenstein Mfr.');
+L.marker([1168, 948]).addTo(map).bindPopup('<b>Nr. 19 – Porzellanmalerin</b><br>Marion Hoesch, Schwarzenbach');
+L.marker([1277, 858]).addTo(map).bindPopup('<b>Nr. 20 – Süßigkeiten, Limo, alkoholfreie Getränke</b>');
+L.marker([1326, 899]).addTo(map).bindPopup('<b>Nr. 21 – Bierausschank Dorflinde</b>');
+L.marker([1371, 1018]).addTo(map).bindPopup('<b>Nr. 22 – Fisch, Lachs etc.</b>');
+L.marker([1410, 931]).addTo(map).bindPopup('<b>Nr. 23 – Pfandrückgabe</b>');
+L.marker([1347, 810]).addTo(map).bindPopup('<b>Nr. 24 – Schnitz, Backela</b>');
+L.marker([1320, 753]).addTo(map).bindPopup('<b>Nr. 25 – Pfandrückgabe Geschirr</b>');
+L.marker([1293, 700]).addTo(map).bindPopup('<b>Nr. 26 – Bratwürste</b>');
+L.marker([1279, 665]).addTo(map).bindPopup('<b>Nr. 27 – Steaks</b>');
+L.marker([1333, 610]).addTo(map).bindPopup('<b>Nr. 28 – Glaskunst</b><br>Gila Dressel, Coburg');
+L.marker([1207, 609]).addTo(map).bindPopup('<b>Nr. 29 – Fränkische Brotsuppe, Backsteinkäse</b>');
+L.marker([1139, 481]).addTo(map).bindPopup('<b>Nr. 30 – Bierausschank Festhalle</b>');
+L.marker([1085, 485]).addTo(map).bindPopup('<b>Nr. 31 – Sau am Spieß</b>');
+L.marker([1128, 352]).addTo(map).bindPopup('<b>Nr. 32 – Schreiner</b><br>Klaus Pittroff und Karl Strunz, Schreinermeister');
+L.marker([1047, 121]).addTo(map).bindPopup('<b>Nr. 33 – Geologe, Edelsteinsuche für Kinder</b><br>Thomas Müller, Marktleuthen');
+L.marker([1054, 75]).addTo(map).bindPopup('<b>Nr. 34 – Lehmbau</b><br>Andreas Link, Hallerstein');
+L.marker([1170, 179]).addTo(map).bindPopup('<b>Nr. 35 – Patchwork</b><br>Evi Müller, Sparneck');
+L.marker([1207, 251]).addTo(map).bindPopup('<b>Nr. 36 – Handweberei</b><br>Helga Krämer, Tiefenbach');
+L.marker([1257, 234]).addTo(map).bindPopup('<b>Nr. 37 – Teddybärenherstellung</b><br>Andreas Weidhaas, Schleiz');
+L.marker([1300, 135]).addTo(map).bindPopup('<b>Nr. 38 – Schmuck aus alltäglichen Gegenständen</b><br>Angela Degelmann, Schwarzenbach/Wald');
+L.marker([1434, 143]).addTo(map).bindPopup('<b>Nr. 39 – Bürstenmacherin</b><br>Kerstin Weber, Haßfurt');
+L.marker([809, 603]).addTo(map).bindPopup('<b>Nr. 40 – Sonderausstellung Holz</b><br>Traktorkult u.a.');
+L.marker([1944, 503]).addTo(map).bindPopup('<b>Nr. 41 – Traktorveteranen, alte Landtechnik</b><br>Traktorkult, HuK Hallerstein');
+L.marker([1863, 546]).addTo(map).bindPopup('<b>Nr. 42 – Imkerei</b><br>Imkerverein Münchberg');
+L.marker([1752, 705]).addTo(map).bindPopup('<b>Nr. 43 – Rechenmacher</b><br>Elmar Gehring, Oberaurach-Neuschleichach');
+L.marker([1711, 765]).addTo(map).bindPopup('<b>Nr. 44 – Ziegenkäserei</b><br>Annette Meißgeier, Pausa');
+L.marker([1672, 713]).addTo(map).bindPopup('<b>Nr. 45 – Muldenhauer</b><br>Olaf Schubert, Kriebstein');
+L.marker([1642, 749]).addTo(map).bindPopup('<b>Nr. 46 – Schnapsbrennerei</b><br>Sandra Lippert, Arzberg');
+L.marker([1615, 857]).addTo(map).bindPopup('<b>Nr. 47 – Erste Hilfe Station</b><br>BRK Schwarzenbach');
+L.marker([1566, 787]).addTo(map).bindPopup('<b>Nr. 48 – Flaschner</b><br>Michael Hein, Schwarzenbach');
+L.marker([1557, 748]).addTo(map).bindPopup('<b>Nr. 49 – Glaskunst</b><br>Heike Glaser, Mehlmeisel');
+L.marker([1491, 693]).addTo(map).bindPopup('<b>Nr. 50 – Makramee</b><br>Anja Köhler, Gattendorf');
+L.marker([1525, 725]).addTo(map).bindPopup('<b>Nr. 51 – Kommunbräu Rehau</b>');
+L.marker([1479, 765]).addTo(map).bindPopup('<b>Nr. 52 – Polsterer</b><br>Ulrike Pöhlmann, Sparneck');
+L.marker([1447, 742]).addTo(map).bindPopup('<b>Nr. 53 – Laubsägearbeiten</b><br>Stefan Pögelt, Großfriesen');
+L.marker([1498, 815]).addTo(map).bindPopup('<b>Nr. 54 – Holzspielwaren</b><br>Elke Panzer, Immenreuth');
+L.marker([1523, 883]).addTo(map).bindPopup('<b>Nr. 55 – Kräuter und Gewürze</b><br>Jürgen Schmindner, Kupferberg');
+L.marker([1640, 1057]).addTo(map).bindPopup('<b>Nr. 56 – Heil- und Gewürzkräuter</b><br>Richard Becher, Ebnath');
+L.marker([1533, 979]).addTo(map).bindPopup('<b>Nr. 57 – Haubenmacherin, Näherin, Spinnerin</b><br>Doris Wildgrube, Schöneck; Claudia Rüpplein, Schwarzenbach; Petra Denk, Schwarzenbach');
+L.marker([1534, 1081]).addTo(map).bindPopup('<b>Nr. 58 – Blumen und Pflanzen</b><br>Gudrun Roßmeißl, Schwarzenbach');
+L.marker([1556, 1113]).addTo(map).bindPopup('<b>Nr. 59 – Buch Hallerstein, Verkauf</b>');
+L.marker([1615, 959]).addTo(map).bindPopup('<b>Nr. 60 – Blaumalerei</b><br>Elisabeth Rohmann, Regis-Breitingen');
+L.marker([1462, 1071]).addTo(map).bindPopup('<b>Nr. 61 – Bauernhofeis Fichtenhammer</b>');
+L.marker([1360, 1125]).addTo(map).bindPopup('<b>Nr. 62 – Nordbayerischer Verein für Natur-, Geschichts- und Landeskunde</b><br>Hof');
+L.marker([1300, 1171]).addTo(map).bindPopup('<b>Nr. 63 – Korbmacher</b><br>Elmar Oppel, Weismain');
+L.marker([1397, 1197]).addTo(map).bindPopup('<b>Nr. 64 – Bienenprodukte</b><br>Imkerverein Schwarzenbach');
+L.marker([1356, 1229]).addTo(map).bindPopup('<b>Nr. 65 – Nostalgische Fotografie</b><br>Maximilian Zeitler, Berlin');
+L.marker([1489, 1146]).addTo(map).bindPopup('<b>Nr. 66 – Vermessung</b><br>Vermessungsamt Wunsiedel');
+L.marker([1481, 1297]).addTo(map).bindPopup('<b>Nr. 67 – Drechsler</b><br>Dieter Stiegler, Waldershof');
+L.marker([1533, 1300]).addTo(map).bindPopup('<b>Nr. 68 – Lebenshilfe Hof</b>');
+L.marker([1445, 1411]).addTo(map).bindPopup('<b>Nr. 69 – Biergarten, Weißwürste</b>');
+L.marker([1582, 1428]).addTo(map).bindPopup('<b>Nr. 70 – Bratwürste und Steaks</b>');
+L.marker([1719, 1455]).addTo(map).bindPopup('<b>Nr. 71 – Alte Kinder- und Mitmachspiele, Blasrohrschießen, Hüpfburg</b>');
+L.marker([1597, 1567]).addTo(map).bindPopup('<b>Nr. 72 – Drechsler</b><br>Ulrich Bartsch, Weidenberg');
+L.marker([1523, 1805]).addTo(map).bindPopup('<b>Nr. 73 – Alte Obstsorten, Baumpatenschaften</b><br>Ernst Opel, Völkenreuth');
+L.marker([651, 99]).addTo(map).bindPopup('<b>Nr. 74 – RegioMarkt, Bauernhof Direktvermarktung</b><br>Familie Kießling');
+</script>
+</body>
+</html>
