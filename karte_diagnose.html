@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handwerkerfest – Diagnosekarte</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
+  html, body { height: 100%; margin:0; }
+  #map { position:absolute; inset:0; }
+  .panel {
+    position: absolute; z-index:1000; top: 10px; left: 10px;
+    background: rgba(255,255,255,.95); padding:10px; border-radius:10px;
+    font-family: system-ui, Arial, sans-serif; font-size:14px; box-shadow:0 2px 8px rgba(0,0,0,.15);
+  }
+  .panel input { width: 90px; }
+  .log { margin-top:6px; max-width: 320px; word-break: break-all; }
+  .corner { font-size:12px; background:#fff; padding:2px 4px; border-radius:4px; border:1px solid #ccc; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel">
+  <div><b>Koordinaten-Diagnose</b></div>
+  <div>Bild-Bounds: 1903 × 2048 (Leaflet)</div>
+  <div style="margin-top:6px;">Wenn deine Koordinaten auf <i>anderer Arbeitsfläche</i> gemessen wurden, hier eintragen:</div>
+  <div>
+    Gemessen auf: 
+    <label>Breite <input id="mw" type="number" value="1903"></label>
+    <label>Höhe <input id="mh" type="number" value="2048"></label>
+    <button id="apply">Neu platzieren</button>
+  </div>
+  <div class="log" id="log">Karte anklicken, um [Y, X] anzuzeigen.</div>
+</div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  const WIDTH = 1903, HEIGHT = 2048;
+  const POINTS = [(1, 'Imkereizubehör', 'Michael Diesing, Mechlenreuth', 1628, 1469), (2, 'Schmied', 'Axel und Sofia Neumann, Hallerstein; Klaus Fischer, Grafengehaig', 1542, 1491), (3, 'Drechsler', 'Jens Fölsche, Sonneberg', 1549, 1441), (4, 'Holzröhren bohren', 'Bauernhofmuseum Kleinlosnitz', 1596, 1434)];
+
+  const map = L.map('map', { crs: L.CRS.Simple, minZoom: -1, maxZoom: 2 });
+  const bounds = [[0,0], [HEIGHT, WIDTH]];
+  L.imageOverlay('https://image.jimcdn.com/app/cms/image/transf/none/path/sb2549a3a4411f8d3/image/i77e4828c9bf229dc/version/1754903999/image.png', bounds).addTo(map);
+  map.fitBounds(bounds);
+
+  // Ecken markieren (zur Kontrolle)
+  L.marker([0,0]).addTo(map).bindTooltip('0,0', {permanent:true, className:'corner', direction:'right'});
+  L.marker([0,WIDTH]).addTo(map).bindTooltip('0,'+WIDTH, {permanent:true, className:'corner', direction:'left'});
+  L.marker([HEIGHT,0]).addTo(map).bindTooltip(HEIGHT+',0', {permanent:true, className:'corner', direction:'right'});
+  L.marker([HEIGHT,WIDTH]).addTo(map).bindTooltip(HEIGHT+','+WIDTH, {permanent:true, className:'corner', direction:'left'});
+
+  const layerGroup = L.layerGroup().addTo(map);
+
+  function placePoints(measuredW, measuredH) {
+    layerGroup.clearLayers();
+    const sx = WIDTH / measuredW;
+    const sy = HEIGHT / measuredH;
+    POINTS.forEach(([num, title, subtitle, x, y]) => {
+      const x2 = x * sx;
+      const y2 = y * sy;
+      L.marker([y2, x2]).addTo(layerGroup)
+        .bindPopup(`<b>Nr. ${num} – ${title}</b><br>${subtitle}`);
+    });
+  }
+
+  // initial (ohne Skalierung, falls schon 1903x2048 gemessen)
+  placePoints(1903, 2048);
+
+  document.getElementById('apply').addEventListener('click', () => {
+    const mw = parseFloat(document.getElementById('mw').value || '1903');
+    const mh = parseFloat(document.getElementById('mh').value || '2048');
+    placePoints(mw, mh);
+  });
+
+  // Klick-Logger
+  map.on('click', (e) => {
+    const y = e.latlng.lat.toFixed(0);
+    const x = e.latlng.lng.toFixed(0);
+    document.getElementById('log').textContent = `Klick bei [Y, X] = [${y}, ${x}]`;
+  });
+</script>
+</body>
+</html>
