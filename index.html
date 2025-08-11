@@ -3,25 +3,118 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Handwerkerfest – Testkarte</title>
+<title>Handwerkerfest – Interaktive Karte (vollständig)</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <style>
   html, body { height: 100%; margin:0; }
   #map { height: 100%; width: 100%; }
+  .leaflet-popup-content-wrapper { border-radius: 12px; }
+  .leaflet-popup-content b { font-size: 14px; }
 </style>
 </head>
 <body>
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-  var map = L.map('map', { crs: L.CRS.Simple, minZoom: -1, maxZoom: 2 });
-  var bounds = [[0,0], [2048, 1903]];
-  L.imageOverlay('https://image.jimcdn.com/app/cms/image/transf/none/path/sb2549a3a4411f8d3/image/i77e4828c9bf229dc/version/1754903999/image.png', bounds).addTo(map);
+  // Bildgröße (px)
+  const WIDTH = 1903, HEIGHT = 2048;
+  // Hintergrundbild (dein Plan)
+  const IMAGE_URL = "https://image.jimcdn.com/app/cms/image/transf/none/path/sb2549a3a4411f8d3/image/i77e4828c9bf229dc/version/1754903999/image.png";
+
+  // Daten: Photoshop-/Bildkoordinaten (X rechts, Y nach unten) – wir spiegeln Y in Leaflet
+  const STANDS = [
+    {n:1,  t:"Imkereizubehör", s:"Michael Diesing, Mechlenreuth", x:1628, y:1469},
+    {n:2,  t:"Schmied", s:"Axel und Sofia Neumann, Hallerstein; Klaus Fischer, Grafengehaig", x:1542, y:1491},
+    {n:3,  t:"Drechsler", s:"Jens Fölsche, Sonneberg", x:1549, y:1441},
+    {n:4,  t:"Holzröhren bohren", s:"Bauernhofmuseum Kleinlosnitz", x:1596, y:1434},
+    {n:5,  t:"Dachdecker", s:"Florian Strößenreuther, Schwarzenbach", x:1518, y:1371},
+    {n:6,  t:"Filzerei", s:"Anita Köstler, Neualbenreuth", x:1381, y:1287},
+    {n:7,  t:"Zwiebelkuchen, Wein", s:"", x:1256, y:1188},
+    {n:8,  t:"Goldschmied", s:"Kerstin Emtmann, Hof", x:1328, y:1165},
+    {n:9,  t:"Bierbrauer", s:"Florian Trautner, Hallerstein", x:1559, y:1052},
+    {n:10, t:"Dorfkirche", s:"", x:1499, y:930},
+    {n:11, t:"Wurzelschnitzer", s:"Martin Höfer, Fuchsmühl", x:1267, y:1082},
+    {n:12, t:"Kaffee und Kuchen", s:"", x:1242, y:892},
+    {n:13, t:"Kaffeegarten", s:"", x:1144, y:943},
+    {n:14, t:"Holzschnitzer", s:"Ottomar Heckel, Grünbach", x:1126, y:1009},
+    {n:15, t:"Holzbildhauer", s:"Holzart Glatz", x:1059, y:1030},
+    {n:16, t:"Hutmacherin", s:"Sabine Tauscher, Jena", x:1027, y:1128},
+    {n:17, t:"Gegenstände aus Wachs und Gießharz", s:"Lebenshilfe Fichtelgebirge", x:1068, y:1161},
+    {n:18, t:"Kammmacher", s:"Martin Groetsch, Hartenstein Mfr.", x:1029, y:1179},
+    {n:19, t:"Porzellanmalerin", s:"Marion Hoesch, Schwarzenbach", x:945, y:1169},
+    {n:20, t:"Süßigkeiten, Limo, alkoholfreie Getränke", s:"", x:860, y:1274},
+    {n:21, t:"Bierausschank Dorflinde", s:"", x:902, y:1326},
+    {n:22, t:"Fisch, Lachs etc.", s:"", x:1016, y:1373},
+    {n:23, t:"Pfandrückgabe", s:"", x:930, y:1408},
+    {n:24, t:"Schnitz, Backela", s:"", x:806, y:1347},
+    {n:25, t:"Pfandrückgabe Geschirr", s:"", x:751, y:1320},
+    {n:26, t:"Bratwürste", s:"", x:700, y:1295},
+    {n:27, t:"Steaks", s:"", x:668, y:1281},
+    {n:28, t:"Glaskunst", s:"Gila Dressel, Coburg", x:613, y:1205},
+    {n:29, t:"Fränkische Brotsuppe, Backsteinkäse", s:"", x:482, y:1144},
+    {n:30, t:"Bierausschank Festhalle", s:"", x:349, y:1132},
+    {n:31, t:"Sau am Spieß", s:"", x:484, y:1085},
+    {n:32, t:"Schreiner", s:"Klaus Pittroff und Karl Strunz, Schreinermeister", x:356, y:1128},
+    {n:33, t:"Geologe, Edelsteinsuche für Kinder", s:"Thomas Müller, Marktleuthen", x:125, y:1046},
+    {n:34, t:"Lehmbau", s:"Andreas Link, Hallerstein", x:77, y:1054},
+    {n:35, t:"Patchwork", s:"Evi Müller, Sparneck", x:181, y:1169},
+    {n:36, t:"Handweberei", s:"Helga Krämer, Tiefenbach", x:265, y:1210},
+    {n:37, t:"Teddybärenherstellung", s:"Andreas Weidhaas, Schleiz", x:235, y:1254},
+    {n:38, t:"Schmuck aus alltäglichen Gegenständen", s:"Angela Degelmann, Schwarzenbach/Wald", x:141, y:1296},
+    {n:39, t:"Bürstenmacherin", s:"Kerstin Weber, Haßfurt", x:139, y:1435},
+    {n:40, t:"Sonderausstellung Holz", s:"Traktorkult u.a.", x:430, y:1951},
+    {n:41, t:"Traktorveteranen, alte Landtechnik", s:"Traktorkult, HuK Hallerstein", x:519, y:1964},
+    {n:42, t:"Imkerei", s:"Imkerverein Münchberg", x:555, y:1907},
+    {n:43, t:"Rechenmacher", s:"Elmar Gehring, Oberaurach-Neuschleichach", x:546, y:1861},
+    {n:44, t:"Ziegenkäserei", s:"Annette Meißgeier, Pausa", x:705, y:1754},
+    {n:45, t:"Muldenhauer", s:"Olaf Schubert, Kriebstein", x:765, y:1712},
+    {n:46, t:"Schnapsbrennerei", s:"Sandra Lippert, Arzberg", x:716, y:1671},
+    {n:47, t:"Erste Hilfe Station", s:"BRK Schwarzenbach", x:858, y:1613},
+    {n:48, t:"Flaschner", s:"Michael Hein, Schwarzenbach", x:787, y:1564},
+    {n:49, t:"Glaskunst", s:"Heike Glaser, Mehlmeisel", x:744, y:1562},
+    {n:50, t:"Makramee", s:"Anja Köhler, Gattendorf", x:692, y:1491},
+    {n:51, t:"Kommunbräu Rehau", s:"", x:727, y:1525},
+    {n:52, t:"Polsterer", s:"Ulrike Pöhlmann, Sparneck", x:766, y:1479},
+    {n:53, t:"Laubsägearbeiten", s:"Stefan Pögelt, Großfriesen", x:739, y:1453},
+    {n:54, t:"Holzspielwaren", s:"Elke Panzer, Immenreuth", x:813, y:1496},
+    {n:55, t:"Kräuter und Gewürze", s:"Jürgen Schmindner, Kupferberg", x:885, y:1525},
+    {n:56, t:"Heil- und Gewürzkräuter", s:"Richard Becher, Ebnath", x:1054, y:1644},
+    {n:57, t:"Haubenmacherin, Näherin, Spinnerin", s:"Doris Wildgrube, Schöneck; Claudia Rüpplein, Schwarzenbach; Petra Denk, Schwarzenbach", x:981, y:1532},
+    {n:58, t:"Blumen und Pflanzen", s:"Gudrun Roßmeißl, Schwarzenbach", x:1079, y:1539},
+    {n:59, t:"Buch Hallerstein, Verkauf", s:"", x:1114, y:1557},
+    {n:60, t:"Blaumalerei", s:"Elisabeth Rohmann, Regis-Breitingen", x:959, y:1614},
+    {n:61, t:"Bauernhofeis Fichtenhammer", s:"", x:1072, y:1463},
+    {n:62, t:"Nordbayerischer Verein für Natur-, Geschichts- und Landeskunde", s:"Hof", x:1123, y:1363},
+    {n:63, t:"Korbmacher", s:"Elmar Oppel, Weismain", x:1166, y:1312},
+    {n:64, t:"Bienenprodukte", s:"Imkerverein Schwarzenbach", x:1204, y:1395},
+    {n:65, t:"Nostalgische Fotografie", s:"Maximilian Zeitler, Berlin", x:1231, y:1353},
+    {n:66, t:"Vermessung", s:"Vermessungsamt Wunsiedel", x:1148, y:1489},
+    {n:67, t:"Drechsler", s:"Dieter Stiegler, Waldershof", x:1296, y:1480},
+    {n:68, t:"Lebenshilfe Hof", s:"", x:1302, y:1534},
+    {n:69, t:"Biergarten, Weißwürste", s:"", x:1410, y:1446},
+    {n:70, t:"Bratwürste und Steaks", s:"", x:1430, y:1584},
+    {n:71, t:"Alte Kinder- und Mitmachspiele, Blasrohrschießen, Hüpfburg", s:"", x:1457, y:1722},
+    {n:72, t:"Drechsler", s:"Ulrich Bartsch, Weidenberg", x:1566, y:1597},
+    {n:73, t:"Alte Obstsorten, Baumpatenschaften", s:"Ernst Opel, Völkenreuth", x:1804, y:1524},
+    {n:74, t:"RegioMarkt, Bauernhof Direktvermarktung", s:"Familie Kießling", x:99, y:653},
+  ];
+
+  // Leaflet-Karte aufsetzen (Y wird gespiegelt: LeafletY = HEIGHT - PhotoshopY)
+  const map = L.map('map', { crs: L.CRS.Simple, minZoom: -1, maxZoom: 2, zoomControl: true });
+  const bounds = [[0,0], [HEIGHT, WIDTH]];
+  L.imageOverlay(IMAGE_URL, bounds).addTo(map);
   map.fitBounds(bounds);
-  L.marker([1469, 1628]).addTo(map).bindPopup('<b>Nr. 1 – Imkereizubehör</b><br>Michael Diesing, Mechlenreuth');
-L.marker([1491, 1542]).addTo(map).bindPopup('<b>Nr. 2 – Schmied</b><br>Axel und Sofia Neumann, Hallerstein; Klaus Fischer, Grafengehaig');
-L.marker([1441, 1549]).addTo(map).bindPopup('<b>Nr. 3 – Drechsler</b><br>Jens Fölsche, Sonneberg');
-L.marker([1434, 1596]).addTo(map).bindPopup('<b>Nr. 4 – Holzröhren bohren</b><br>Bauernhofmuseum Kleinlosnitz');
+
+  STANDS.forEach(({n,t,s,x,y}) => {
+    const ly = HEIGHT - y; // Spiegelung!
+    L.marker([ly, x]).addTo(map)
+      .bindPopup(`<b>Nr. ${n} – ${escapeHtml(t)}</b>${s ? "<br>"+escapeHtml(s) : ""}`);
+  });
+
+  // kleines Escape-Helper für sichere Popups
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
 </script>
 </body>
 </html>
