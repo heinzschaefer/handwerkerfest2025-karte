@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handwerkerfest – Interaktive Karte</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
+html, body { height:100%; margin:0; font-family:Arial,sans-serif; }
+.container { display:flex; flex-direction:row; height:100%; }
+#list { width:300px; overflow-y:auto; border-right:1px solid #ccc; padding:5px; background:#f9f9f9; }
+#map { flex:1; }
+.list-item { padding:4px; cursor:pointer; border-bottom:1px solid #eee; }
+.list-item:hover { background:#e0e0e0; }
+@media(max-width:768px){
+  .container { flex-direction:column; }
+  #list { width:100%; height:200px; border-right:none; border-bottom:1px solid #ccc; }
+  #map { height:calc(100% - 200px); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div id="list">
+    <div class='list-item' onclick='focusMarker(1)'>Nr. 1 – Imkereizubehör</div><div class='list-item' onclick='focusMarker(2)'>Nr. 2 – Schmied</div><div class='list-item' onclick='focusMarker(3)'>Nr. 3 – Drechsler</div><div class='list-item' onclick='focusMarker(4)'>Nr. 4 – Holzröhren bohren</div><div class='list-item' onclick='focusMarker(5)'>Nr. 5 – Dachdecker</div><div class='list-item' onclick='focusMarker(6)'>Nr. 6 – Filzerei</div><div class='list-item' onclick='focusMarker(7)'>Nr. 7 – Zwiebelkuchen, Wein</div><div class='list-item' onclick='focusMarker(8)'>Nr. 8 – Goldschmied</div><div class='list-item' onclick='focusMarker(9)'>Nr. 9 – Bierbrauer</div><div class='list-item' onclick='focusMarker(10)'>Nr. 10 – Dorfkirche</div><div class='list-item' onclick='focusMarker(11)'>Nr. 11 – Wurzelschnitzer</div><div class='list-item' onclick='focusMarker(12)'>Nr. 12 – Kaffee und Kuchen</div><div class='list-item' onclick='focusMarker(13)'>Nr. 13 – Kaffeegarten</div><div class='list-item' onclick='focusMarker(14)'>Nr. 14 – Holzschnitzer</div><div class='list-item' onclick='focusMarker(15)'>Nr. 15 – Holzbildhauer</div><div class='list-item' onclick='focusMarker(16)'>Nr. 16 – Hutmacherin</div><div class='list-item' onclick='focusMarker(17)'>Nr. 17 – Gegenstände aus Wachs und Gießharz</div><div class='list-item' onclick='focusMarker(18)'>Nr. 18 – Kammmacher</div><div class='list-item' onclick='focusMarker(19)'>Nr. 19 – Porzellanmalerin</div><div class='list-item' onclick='focusMarker(20)'>Nr. 20 – Süßigkeiten, Limo, alkoholfreie Getränke</div><div class='list-item' onclick='focusMarker(21)'>Nr. 21 – Bierausschank Dorflinde</div><div class='list-item' onclick='focusMarker(22)'>Nr. 22 – Fisch, Lachs etc.</div><div class='list-item' onclick='focusMarker(23)'>Nr. 23 – Pfandrückgabe</div><div class='list-item' onclick='focusMarker(24)'>Nr. 24 – Schnitz, Backela</div><div class='list-item' onclick='focusMarker(25)'>Nr. 25 – Pfandrückgabe Geschirr</div><div class='list-item' onclick='focusMarker(26)'>Nr. 26 – Bratwürste</div><div class='list-item' onclick='focusMarker(27)'>Nr. 27 – Steaks</div><div class='list-item' onclick='focusMarker(28)'>Nr. 28 – Glaskunst</div><div class='list-item' onclick='focusMarker(29)'>Nr. 29 – Fränkische Brotsuppe, Backsteinkäse</div><div class='list-item' onclick='focusMarker(30)'>Nr. 30 – Bierausschank Festhalle</div><div class='list-item' onclick='focusMarker(31)'>Nr. 31 – Sau am Spieß</div><div class='list-item' onclick='focusMarker(32)'>Nr. 32 – Schreiner</div><div class='list-item' onclick='focusMarker(33)'>Nr. 33 – Geologe, Edelsteinsuche für Kinder</div><div class='list-item' onclick='focusMarker(34)'>Nr. 34 – Lehmbau</div><div class='list-item' onclick='focusMarker(35)'>Nr. 35 – Patchwork</div><div class='list-item' onclick='focusMarker(36)'>Nr. 36 – Handweberei</div><div class='list-item' onclick='focusMarker(37)'>Nr. 37 – Teddybärenherstellung</div><div class='list-item' onclick='focusMarker(38)'>Nr. 38 – Schmuck aus alltäglichen Gegenständen</div><div class='list-item' onclick='focusMarker(39)'>Nr. 39 – Bürstenmacherin</div><div class='list-item' onclick='focusMarker(40)'>Nr. 40 – Sonderausstellung Holz</div><div class='list-item' onclick='focusMarker(41)'>Nr. 41 – Traktorveteranen, alte Landtechnik</div><div class='list-item' onclick='focusMarker(42)'>Nr. 42 – Imkerei</div><div class='list-item' onclick='focusMarker(43)'>Nr. 43 – Rechenmacher</div><div class='list-item' onclick='focusMarker(44)'>Nr. 44 – Ziegenkäserei</div><div class='list-item' onclick='focusMarker(45)'>Nr. 45 – Muldenhauer</div><div class='list-item' onclick='focusMarker(46)'>Nr. 46 – Schnapsbrennerei</div><div class='list-item' onclick='focusMarker(47)'>Nr. 47 – Erste Hilfe Station</div><div class='list-item' onclick='focusMarker(48)'>Nr. 48 – Flaschner</div><div class='list-item' onclick='focusMarker(49)'>Nr. 49 – Glaskunst</div><div class='list-item' onclick='focusMarker(50)'>Nr. 50 – Makramee</div><div class='list-item' onclick='focusMarker(51)'>Nr. 51 – Kommunbräu Rehau</div><div class='list-item' onclick='focusMarker(52)'>Nr. 52 – Polsterer</div><div class='list-item' onclick='focusMarker(53)'>Nr. 53 – Laubsägearbeiten</div><div class='list-item' onclick='focusMarker(54)'>Nr. 54 – Holzspielwaren</div><div class='list-item' onclick='focusMarker(55)'>Nr. 55 – Kräuter und Gewürze</div><div class='list-item' onclick='focusMarker(56)'>Nr. 56 – Heil- und Gewürzkräuter</div><div class='list-item' onclick='focusMarker(57)'>Nr. 57 – Haubenmacherin, Näherin, Spinnerin</div><div class='list-item' onclick='focusMarker(58)'>Nr. 58 – Blumen und Pflanzen</div><div class='list-item' onclick='focusMarker(59)'>Nr. 59 – Buch Hallerstein, Verkauf</div><div class='list-item' onclick='focusMarker(60)'>Nr. 60 – Blaumalerei</div><div class='list-item' onclick='focusMarker(61)'>Nr. 61 – Bauernhofeis Fichtenhammer</div><div class='list-item' onclick='focusMarker(62)'>Nr. 62 – Nordbayerischer Verein für Natur-, Geschichts- und Landeskunde</div><div class='list-item' onclick='focusMarker(63)'>Nr. 63 – Korbmacher</div><div class='list-item' onclick='focusMarker(64)'>Nr. 64 – Bienenprodukte</div><div class='list-item' onclick='focusMarker(65)'>Nr. 65 – Nostalgische Fotografie</div><div class='list-item' onclick='focusMarker(66)'>Nr. 66 – Vermessung</div><div class='list-item' onclick='focusMarker(67)'>Nr. 67 – Drechsler</div><div class='list-item' onclick='focusMarker(68)'>Nr. 68 – Lebenshilfe Hof</div><div class='list-item' onclick='focusMarker(69)'>Nr. 69 – Biergarten, Weißwürste</div><div class='list-item' onclick='focusMarker(70)'>Nr. 70 – Bratwürste und Steaks</div><div class='list-item' onclick='focusMarker(71)'>Nr. 71 – Alte Kinder- und Mitmachspiele, Blasrohrschießen, Hüpfburg</div><div class='list-item' onclick='focusMarker(72)'>Nr. 72 – Drechsler</div><div class='list-item' onclick='focusMarker(73)'>Nr. 73 – Alte Obstsorten, Baumpatenschaften</div><div class='list-item' onclick='focusMarker(74)'>Nr. 74 – RegioMarkt, Bauernhof Direktvermarktung</div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+const WIDTH = 1903, HEIGHT = 2048;
+const map = L.map('map', { crs: L.CRS.Simple, minZoom: -1, maxZoom: 2 });
+const bounds = [[0,0], [HEIGHT, WIDTH]];
+L.imageOverlay("https://image.jimcdn.com/app/cms/image/transf/none/path/sb2549a3a4411f8d3/image/i77e4828c9bf229dc/version/1754903999/image.png", bounds).addTo(map);
+map.fitBounds(bounds, {padding:[10,10]});
+
+let markerMap = {};
+const m1 = L.circleMarker([579, 1628], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 1 – Imkereizubehör</b><br>Michael Diesing, Mechlenreuth');
+        markerMap[1] = m1;const m2 = L.circleMarker([557, 1542], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 2 – Schmied</b><br>Axel und Sofia Neumann, Hallerstein; Klaus Fischer, Grafengehaig');
+        markerMap[2] = m2;const m3 = L.circleMarker([607, 1549], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 3 – Drechsler</b><br>Jens Fölsche, Sonneberg');
+        markerMap[3] = m3;const m4 = L.circleMarker([614, 1596], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 4 – Holzröhren bohren</b><br>Bauernhofmuseum Kleinlosnitz');
+        markerMap[4] = m4;const m5 = L.circleMarker([677, 1518], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 5 – Dachdecker</b><br>Florian Strößenreuther, Schwarzenbach');
+        markerMap[5] = m5;const m6 = L.circleMarker([761, 1381], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 6 – Filzerei</b><br>Anita Köstler, Neualbenreuth');
+        markerMap[6] = m6;const m7 = L.circleMarker([860, 1256], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 7 – Zwiebelkuchen, Wein</b>');
+        markerMap[7] = m7;const m8 = L.circleMarker([883, 1328], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 8 – Goldschmied</b><br>Kerstin Emtmann, Hof');
+        markerMap[8] = m8;const m9 = L.circleMarker([996, 1559], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 9 – Bierbrauer</b><br>Florian Trautner, Hallerstein');
+        markerMap[9] = m9;const m10 = L.circleMarker([1118, 1499], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 10 – Dorfkirche</b>');
+        markerMap[10] = m10;const m11 = L.circleMarker([966, 1267], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 11 – Wurzelschnitzer</b><br>Martin Höfer, Fuchsmühl');
+        markerMap[11] = m11;const m12 = L.circleMarker([1156, 1242], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 12 – Kaffee und Kuchen</b>');
+        markerMap[12] = m12;const m13 = L.circleMarker([1105, 1144], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 13 – Kaffeegarten</b>');
+        markerMap[13] = m13;const m14 = L.circleMarker([1039, 1126], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 14 – Holzschnitzer</b><br>Ottomar Heckel, Grünbach');
+        markerMap[14] = m14;const m15 = L.circleMarker([1018, 1059], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 15 – Holzbildhauer</b><br>Holzart Glatz');
+        markerMap[15] = m15;const m16 = L.circleMarker([920, 1027], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 16 – Hutmacherin</b><br>Sabine Tauscher, Jena');
+        markerMap[16] = m16;const m17 = L.circleMarker([887, 1068], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 17 – Gegenstände aus Wachs und Gießharz</b><br>Lebenshilfe Fichtelgebirge');
+        markerMap[17] = m17;const m18 = L.circleMarker([869, 1029], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 18 – Kammmacher</b><br>Martin Groetsch, Hartenstein Mfr.');
+        markerMap[18] = m18;const m19 = L.circleMarker([879, 945], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 19 – Porzellanmalerin</b><br>Marion Hoesch, Schwarzenbach');
+        markerMap[19] = m19;const m20 = L.circleMarker([774, 860], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 20 – Süßigkeiten, Limo, alkoholfreie Getränke</b>');
+        markerMap[20] = m20;const m21 = L.circleMarker([722, 902], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 21 – Bierausschank Dorflinde</b>');
+        markerMap[21] = m21;const m22 = L.circleMarker([675, 1016], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 22 – Fisch, Lachs etc.</b>');
+        markerMap[22] = m22;const m23 = L.circleMarker([640, 930], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 23 – Pfandrückgabe</b>');
+        markerMap[23] = m23;const m24 = L.circleMarker([701, 806], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 24 – Schnitz, Backela</b>');
+        markerMap[24] = m24;const m25 = L.circleMarker([728, 751], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 25 – Pfandrückgabe Geschirr</b>');
+        markerMap[25] = m25;const m26 = L.circleMarker([753, 700], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 26 – Bratwürste</b>');
+        markerMap[26] = m26;const m27 = L.circleMarker([767, 668], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 27 – Steaks</b>');
+        markerMap[27] = m27;const m28 = L.circleMarker([843, 613], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 28 – Glaskunst</b><br>Gila Dressel, Coburg');
+        markerMap[28] = m28;const m29 = L.circleMarker([904, 482], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 29 – Fränkische Brotsuppe, Backsteinkäse</b>');
+        markerMap[29] = m29;const m30 = L.circleMarker([916, 349], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 30 – Bierausschank Festhalle</b>');
+        markerMap[30] = m30;const m31 = L.circleMarker([963, 484], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 31 – Sau am Spieß</b>');
+        markerMap[31] = m31;const m32 = L.circleMarker([920, 356], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 32 – Schreiner</b><br>Klaus Pittroff und Karl Strunz, Schreinermeister');
+        markerMap[32] = m32;const m33 = L.circleMarker([1002, 125], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 33 – Geologe, Edelsteinsuche für Kinder</b><br>Thomas Müller, Marktleuthen');
+        markerMap[33] = m33;const m34 = L.circleMarker([994, 77], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 34 – Lehmbau</b><br>Andreas Link, Hallerstein');
+        markerMap[34] = m34;const m35 = L.circleMarker([879, 181], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 35 – Patchwork</b><br>Evi Müller, Sparneck');
+        markerMap[35] = m35;const m36 = L.circleMarker([838, 265], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 36 – Handweberei</b><br>Helga Krämer, Tiefenbach');
+        markerMap[36] = m36;const m37 = L.circleMarker([794, 235], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 37 – Teddybärenherstellung</b><br>Andreas Weidhaas, Schleiz');
+        markerMap[37] = m37;const m38 = L.circleMarker([752, 141], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 38 – Schmuck aus alltäglichen Gegenständen</b><br>Angela Degelmann, Schwarzenbach/Wald');
+        markerMap[38] = m38;const m39 = L.circleMarker([613, 139], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 39 – Bürstenmacherin</b><br>Kerstin Weber, Haßfurt');
+        markerMap[39] = m39;const m40 = L.circleMarker([97, 430], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 40 – Sonderausstellung Holz</b><br>Traktorkult u.a.');
+        markerMap[40] = m40;const m41 = L.circleMarker([84, 519], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 41 – Traktorveteranen, alte Landtechnik</b><br>Traktorkult, HuK Hallerstein');
+        markerMap[41] = m41;const m42 = L.circleMarker([141, 555], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 42 – Imkerei</b><br>Imkerverein Münchberg');
+        markerMap[42] = m42;const m43 = L.circleMarker([187, 546], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 43 – Rechenmacher</b><br>Elmar Gehring, Oberaurach-Neuschleichach');
+        markerMap[43] = m43;const m44 = L.circleMarker([294, 705], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 44 – Ziegenkäserei</b><br>Annette Meißgeier, Pausa');
+        markerMap[44] = m44;const m45 = L.circleMarker([336, 765], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 45 – Muldenhauer</b><br>Olaf Schubert, Kriebstein');
+        markerMap[45] = m45;const m46 = L.circleMarker([377, 716], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 46 – Schnapsbrennerei</b><br>Sandra Lippert, Arzberg');
+        markerMap[46] = m46;const m47 = L.circleMarker([435, 858], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 47 – Erste Hilfe Station</b><br>BRK Schwarzenbach');
+        markerMap[47] = m47;const m48 = L.circleMarker([484, 787], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 48 – Flaschner</b><br>Michael Hein, Schwarzenbach');
+        markerMap[48] = m48;const m49 = L.circleMarker([486, 744], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 49 – Glaskunst</b><br>Heike Glaser, Mehlmeisel');
+        markerMap[49] = m49;const m50 = L.circleMarker([557, 692], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 50 – Makramee</b><br>Anja Köhler, Gattendorf');
+        markerMap[50] = m50;const m51 = L.circleMarker([523, 727], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 51 – Kommunbräu Rehau</b>');
+        markerMap[51] = m51;const m52 = L.circleMarker([569, 766], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 52 – Polsterer</b><br>Ulrike Pöhlmann, Sparneck');
+        markerMap[52] = m52;const m53 = L.circleMarker([595, 739], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 53 – Laubsägearbeiten</b><br>Stefan Pögelt, Großfriesen');
+        markerMap[53] = m53;const m54 = L.circleMarker([552, 813], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 54 – Holzspielwaren</b><br>Elke Panzer, Immenreuth');
+        markerMap[54] = m54;const m55 = L.circleMarker([523, 885], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 55 – Kräuter und Gewürze</b><br>Jürgen Schmindner, Kupferberg');
+        markerMap[55] = m55;const m56 = L.circleMarker([404, 1054], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 56 – Heil- und Gewürzkräuter</b><br>Richard Becher, Ebnath');
+        markerMap[56] = m56;const m57 = L.circleMarker([516, 981], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 57 – Haubenmacherin, Näherin, Spinnerin</b><br>Doris Wildgrube, Schöneck; Claudia Rüpplein, Schwarzenbach; Petra Denk, Schwarzenbach');
+        markerMap[57] = m57;const m58 = L.circleMarker([509, 1079], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 58 – Blumen und Pflanzen</b><br>Gudrun Roßmeißl, Schwarzenbach');
+        markerMap[58] = m58;const m59 = L.circleMarker([491, 1114], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 59 – Buch Hallerstein, Verkauf</b>');
+        markerMap[59] = m59;const m60 = L.circleMarker([434, 959], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 60 – Blaumalerei</b><br>Elisabeth Rohmann, Regis-Breitingen');
+        markerMap[60] = m60;const m61 = L.circleMarker([585, 1072], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 61 – Bauernhofeis Fichtenhammer</b>');
+        markerMap[61] = m61;const m62 = L.circleMarker([685, 1123], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 62 – Nordbayerischer Verein für Natur-, Geschichts- und Landeskunde</b><br>Hof');
+        markerMap[62] = m62;const m63 = L.circleMarker([736, 1166], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 63 – Korbmacher</b><br>Elmar Oppel, Weismain');
+        markerMap[63] = m63;const m64 = L.circleMarker([653, 1204], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 64 – Bienenprodukte</b><br>Imkerverein Schwarzenbach');
+        markerMap[64] = m64;const m65 = L.circleMarker([695, 1231], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 65 – Nostalgische Fotografie</b><br>Maximilian Zeitler, Berlin');
+        markerMap[65] = m65;const m66 = L.circleMarker([559, 1148], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 66 – Vermessung</b><br>Vermessungsamt Wunsiedel');
+        markerMap[66] = m66;const m67 = L.circleMarker([568, 1296], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 67 – Drechsler</b><br>Dieter Stiegler, Waldershof');
+        markerMap[67] = m67;const m68 = L.circleMarker([514, 1302], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 68 – Lebenshilfe Hof</b>');
+        markerMap[68] = m68;const m69 = L.circleMarker([602, 1410], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 69 – Biergarten, Weißwürste</b>');
+        markerMap[69] = m69;const m70 = L.circleMarker([464, 1430], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 70 – Bratwürste und Steaks</b>');
+        markerMap[70] = m70;const m71 = L.circleMarker([326, 1457], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 71 – Alte Kinder- und Mitmachspiele, Blasrohrschießen, Hüpfburg</b>');
+        markerMap[71] = m71;const m72 = L.circleMarker([451, 1566], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 72 – Drechsler</b><br>Ulrich Bartsch, Weidenberg');
+        markerMap[72] = m72;const m73 = L.circleMarker([524, 1804], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 73 – Alte Obstsorten, Baumpatenschaften</b><br>Ernst Opel, Völkenreuth');
+        markerMap[73] = m73;const m74 = L.circleMarker([1395, 99], {radius: 14, color: '#888', weight:1, fillColor:'#ccc', fillOpacity:0.4})
+        .addTo(map).bindPopup('<b>Nr. 74 – RegioMarkt, Bauernhof Direktvermarktung</b><br>Familie Kießling');
+        markerMap[74] = m74;
+
+function focusMarker(n) {
+    const m = markerMap[n];
+    if(m) {
+        map.setView(m.getLatLng(), 1);
+        m.openPopup();
+    }
+}
+
+// Fix für iFrame-Ladeproblem auf Mobilgeräten
+map.whenReady(() => {
+    setTimeout(() => {
+        map.invalidateSize();
+        map.fitBounds(bounds, {padding:[10,10]});
+    }, 300);
+});
+</script>
+</body>
+</html>
